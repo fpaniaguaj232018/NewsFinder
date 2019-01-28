@@ -12,6 +12,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -82,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
             tvProgreso.setText("Leyendo linea " + values[0]);
         }
 
+        /*
         @Override
         protected void onPostExecute(StringBuilder stringBuilder) {
             super.onPostExecute(stringBuilder);
@@ -90,6 +95,27 @@ public class MainActivity extends AppCompatActivity {
             String texto = ((EditText)findViewById(R.id.etPalabra)).getText().toString();
             int numeroPalabras = ContadorDePalabras.contarPalabras(stringBuilder, texto);
             ((TextView)findViewById(R.id.tvResultado)).setText(String.valueOf(numeroPalabras));
+        }
+        */
+
+        @Override
+        protected void onPostExecute(StringBuilder stringBuilder) {
+            super.onPostExecute(stringBuilder);
+            ProgressBar pb = (ProgressBar)findViewById(R.id.progressBar);
+            pb.setVisibility(View.INVISIBLE);
+
+            try {
+                JSONObject jsonObject = new JSONObject(stringBuilder.toString());
+                JSONArray jsa = jsonObject.getJSONArray("videojuegos");
+                for (int i=0;i<jsa.length();i++){
+                    JSONObject jso = jsa.getJSONObject(i);
+                    JSONObject juego = jso.getJSONObject("videojuego");
+                    Log.d("JOSECARLOS", juego.get("titulo").toString());
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
